@@ -6,7 +6,7 @@
 #' \describe{
 #'   \item{id}{Id of the station.}
 #'   \item{stationname}{Name of the station.}
-#'   \item{initial date}{Date when the station started to operate,
+#'   \item{initial_date}{Date when the station started to operate,
 #'   in format dd/mm/aaaa.}
 #' }
 #' @source \url{http://qualar.cetesb.sp.gov.br/}

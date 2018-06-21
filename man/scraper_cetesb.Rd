@@ -10,10 +10,10 @@ scraper_cetesb(station, parameter, start, end, type = "P", login, password,
 \arguments{
 \item{station}{A numeric value indicating the station id from
 where you wish to get the data.
-See \link[Rpollution:cetesb_station_ids]{Rpollution::cetesb_station_ids}.}
+See \link[koffing:cetesb_station_ids]{koffing::cetesb_station_ids}.}
 
 \item{parameter}{A numeric value indicating the CETESB parameter
-id. See \link[Rpollution:cetesb_station_ids]{Rpollution::cetesb_station_ids}.}
+id. See \link[koffing:cetesb_station_ids]{koffing::cetesb_station_ids}.}
 
 \item{start}{A string in the format "dd/mm/aaaa" representing
 the initial day for the data selection.}

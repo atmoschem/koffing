@@ -1,10 +1,12 @@
 Package: koffing
 Title: Air pollution data and scrapers for "catching" air pollution data from public sources
-Version: 0.0.0.9000
-Authors@R: person("William", "Amorim", email = "williamo@curso-r.com", role = c("aut", "cre"))
+Version: 0.0.1
+Authors@R: c(
+  person(given = "William", family = "Amorim", role = c("aut", "cre"), email = "williamo@curso-r.com"),
+  person(given = "Sergio", family = "Ibarra-Espinosa", role = c("ctb"), email = "sergio.ibarra@usp.br", comment = c(ORCID = "0000-0002-3162-1905")))
 Description: Useful functions to air pollution analysis.
 Depends: R (>= 3.4.4)
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests:
@@ -15,7 +17,9 @@ Imports:
   httr, 
   rvest, 
   magrittr,
-  janitor
+  janitor,
+  dplyr,
+  purrr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

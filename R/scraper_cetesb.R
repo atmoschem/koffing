@@ -2,9 +2,9 @@
 #'
 #' @param station A numeric value indicating the station id from
 #' where you wish to get the data.
-#' See [Rpollution::cetesb_station_ids].
+#' See [koffing::cetesb_station_ids].
 #' @param parameter A numeric value indicating the CETESB parameter
-#' id. See [Rpollution::cetesb_station_ids].
+#' id. See [koffing::cetesb_station_ids].
 #' @param start A string in the format "dd/mm/aaaa" representing
 #' the initial day for the data selection.
 #' @param end A string in the format "dd/mm/aaaa" representing  the
@@ -18,7 +18,12 @@
 #' @param network Network type: "A" for automatic or "M" for manual.
 #'
 #' @return A tibble with the data returned by the Qualar system.
-#'
+#' @importFrom magrittr "%>%" set_colnames extract2
+#' @importFrom httr GET cookies POST set_cookies content
+#' @importFrom purrr set_names
+#' @importFrom rvest html_table
+#' @importFrom janitor remove_empty
+#' @importFrom dplyr slice
 #' @examples
 #' \dontrun{
 #'
@@ -82,7 +87,7 @@ scraper_cetesb <- function(station, parameter, start,
   cetesb_data <- httr::content(res) %>%
     rvest::html_table(fill = TRUE) %>%
     magrittr::extract2(2) %>%
-    janitor::remove_empty_cols()
+    janitor::remove_empty()
 
   col_names <- as.character(cetesb_data[1,])
 
