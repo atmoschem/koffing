@@ -95,12 +95,17 @@ scraper_cetesb <- function(station, parameter, start,
     magrittr::set_colnames(col_names) %>%
     dplyr::slice(-1)
   # adicionado x Sergio
+  nombres <- cetesb_data[1, ]
+  cetesb_data <- cetesb_data[2:nrow(cetesb_data), ]
+  names(cetesb_data) <- nombres
   names(cetesb_data) <- gsub(pattern = " ",
                              replacement = "",
                              x = names(cetesb_data))
+
   cetesb_data$time <- as.POSIXct(x = paste(cetesb_data$Data,
                                            cetesb_data$Hora),
                                  tz = "America/Sao_Paulo",
                                  format = "%d/%m/%Y %H:%M")
+  cetesb_data[, 10] <- as.numeric(cetesb_data[, 10])
   return(cetesb_data)
 }
