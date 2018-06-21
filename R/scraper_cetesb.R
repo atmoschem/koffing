@@ -94,5 +94,13 @@ scraper_cetesb <- function(station, parameter, start,
   cetesb_data %>%
     magrittr::set_colnames(col_names) %>%
     dplyr::slice(-1)
-
+  # adicionado x Sergio
+  names(cetesb_data) <- gsub(pattern = " ",
+                             replacement = "",
+                             x = names(cetesb_data))
+  cetesb_data$time <- as.POSIXct(x = paste(cetesb_data$Data,
+                                           cetesb_data$Hora),
+                                 tz = "America/Sao_Paulo",
+                                 format = "%d/%m/%Y %H:%M")
+  return(cetesb_data)
 }
