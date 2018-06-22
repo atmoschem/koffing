@@ -16,6 +16,8 @@
 #' @param invalidData If TRUE, the system will return rows with
 #' invalid data.
 #' @param network Network type: "A" for automatic or "M" for manual.
+#' @param cleanData Should the data be cleaned before returned? The
+#' default is TRUE. Set FALSE to return the data as extracted from Qualar.
 #'
 #' @return A tibble with the data returned by the Qualar system.
 #' @importFrom magrittr "%>%" set_colnames extract2
@@ -35,77 +37,53 @@
 #' }
 #' @export
 
-scraper_cetesb <- function(station, parameter, start,
-                           end, type = "P", login,
-                           password, invalidData = "on",
-                           network = "A") {
+scraper_cetesb <- function(station, parameter, start, end, login, password,
+                           type = "P", invalidData = "on", network = "A",
+                           cleanData = TRUE) {
 
-  # Get cookie
-
-  res <- httr::GET("http://qualar.cetesb.sp.gov.br/qualar/home.do")
-
-  my_cookie <- httr::cookies(res)$value %>%
-    purrr::set_names(httr::cookies(res)$name)
-
-  # Login
-
-  url_login <- "http://qualar.cetesb.sp.gov.br/qualar/autenticador"
-
-  res <- httr::POST(
-    url_login,
-    body = list(
-      cetesb_login = login,
-      cetesb_password = password,
-      enviar = "OK"
-    ),
-    encode = "form",
-    httr::set_cookies(my_cookie)
+  cookie <- get_session_cookie(
+    url = "http://qualar.cetesb.sp.gov.br/qualar/home.do"
   )
 
-  # Search data on system
-
-  url_data <- "http://qualar.cetesb.sp.gov.br/qualar/exportaDados.do"
-
-  res <- httr::POST(
-    url_data,
-    query = list(method = "pesquisar"),
-    body = list(
-      irede = network,
-      dataInicialStr  = start,
-      dataFinalStr = end,
-      cDadosInvalidos = invalidData,
-      iTipoDado = type,
-      estacaoVO.nestcaMonto = station,
-      parametroVO.nparmt = parameter
-    ),
-    encode = "form",
-    httr::set_cookies(my_cookie)
+  res <- login_qualar(
+    url = "http://qualar.cetesb.sp.gov.br/qualar/autenticador",
+    login = login,
+    password = password,
+    cookie = cookie
   )
 
-  # Extract data form html and clean the dataset
+  res <- search_data(
+    url = "http://qualar.cetesb.sp.gov.br/qualar/exportaDados.do",
+    station = station,
+    parameter = parameter,
+    start = start,
+    end = end,
+    network = network,
+    type = type,
+    invalidData = invalidData,
+    cookie = cookie
+  )
 
-  cetesb_data <- httr::content(res) %>%
-    rvest::html_table(fill = TRUE) %>%
-    magrittr::extract2(2) %>%
-    janitor::remove_empty()
+  data <- extract_data(res)
 
-  col_names <- as.character(cetesb_data[1,])
+  data
 
-  cetesb_data %>%
-    magrittr::set_colnames(col_names) %>%
-    dplyr::slice(-1)
-  # adicionado x Sergio
-  nombres <- cetesb_data[1, ]
-  cetesb_data <- cetesb_data[2:nrow(cetesb_data), ]
-  names(cetesb_data) <- nombres
-  names(cetesb_data) <- gsub(pattern = " ",
-                             replacement = "",
-                             x = names(cetesb_data))
+  if(cleanData == TRUE) {
 
-  cetesb_data$time <- as.POSIXct(x = paste(cetesb_data$Data,
-                                           cetesb_data$Hora),
-                                 tz = "America/Sao_Paulo",
-                                 format = "%d/%m/%Y %H:%M")
-  cetesb_data[, 10] <- as.numeric(cetesb_data[, 10])
-  return(cetesb_data)
+    clean_data <- safe_clean_data(data)
+
+    if(is.null(clean_data$result)) {
+      warning(
+        "The clean data function didn't work. The qualar system may have changed. The raw data was returned."
+      )
+      data
+    } else {
+      clean_data$result
+    }
+
+  } else {
+    data
+  }
+
 }
+
