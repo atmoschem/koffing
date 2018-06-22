@@ -4,7 +4,7 @@
 \alias{scraper_cetesb}
 \title{Scraper CETESB}
 \usage{
-scraper_cetesb(station, parameter, start, end, type = "P", login, password,
+scraper_cetesb(station, parameter, start, end, login, password, type = "P",
   invalidData = "on", network = "A")
 }
 \arguments{
@@ -21,12 +21,12 @@ the initial day for the data selection.}
 \item{end}{A string in the format "dd/mm/aaaa" representing  the
 final day for the data selection.}
 
-\item{type}{Type of data: "P" for hourly mean or "M" for moving
-average.}
-
 \item{login}{A string with your login on Qualar system.}
 
 \item{password}{A string with your passoword on Qualar system.}
+
+\item{type}{Type of data: "P" for hourly mean or "M" for moving
+average.}
 
 \item{invalidData}{If TRUE, the system will return rows with
 invalid data.}
