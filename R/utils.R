@@ -85,12 +85,12 @@ clean_qualar_data <- function(df) {
     dplyr::mutate(
       mass_conc = stringr::str_replace(mass_conc, ",", "."),
       mass_conc = as.numeric(mass_conc),
-      time = as.POSIXct(x = paste(date, hour),
-                         tz = "America/Sao_Paulo",
-                         format = "%d/%m/%Y %H:%M"),
       date = lubridate::dmy(date),
       hour = stringr::str_sub(hour, start = 1, end = 2),
       hour = as.numeric(hour),
+      time = lubridate::ymd_h(paste(date, ifelse(nchar(hour-1) == 1,
+                                paste0("0", hour -1),
+                                hour-1))),
       dayofweek = lubridate::wday(date, label = TRUE),
       mass_conc = ifelse(abs(mass_conc) == 9999999, NA, mass_conc),
       parameter = stringr::str_replace_all(parameter, " [(].*", "")
