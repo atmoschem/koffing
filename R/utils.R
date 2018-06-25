@@ -55,7 +55,7 @@ search_data <- function(url, station, parameter, start, end,
 #'
 extract_data <- function(res) {
 
-    httr::content(res) %>%
+  httr::content(res) %>%
     rvest::html_table(fill = TRUE) %>%
     magrittr::extract2(2)
 
@@ -71,7 +71,7 @@ clean_qualar_data <- function(df) {
 
   col_names <- as.character(df[1,])
 
-  df %>%
+  dft <- df %>%
     magrittr::set_colnames(col_names) %>%
     dplyr::slice(-1) %>%
     dplyr::select(
@@ -92,6 +92,13 @@ clean_qualar_data <- function(df) {
       mass_conc = ifelse(abs(mass_conc) == 9999999, NA, mass_conc),
       parameter = stringr::str_replace_all(parameter, " [(].*", "")
     )
+  hora <- dft$hour - 1
+  hora <- ifelse(nchar(hora) == 1, paste0("0", hora),
+                 as.character(hora))
+  dia <- ifelse(hora == "23", dft$Data + 1, dft$Data)
+  dft$datetime <- as.POSIXct(paste(dia, hora), tz = "America/Sao_Paulo",
+                             format = "%Y-%m-%d %H")
+  return(dft)
 
 }
 
