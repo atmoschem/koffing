@@ -88,11 +88,12 @@ clean_qualar_data <- function(df) {
       mass_conc = as.numeric(mass_conc),
       date = lubridate::dmy(date),
       date_time = lubridate::ymd_hms(paste(date, paste0(hour, ":00"))) - 1,
-      hour = lubridate::hour(date_time),
+      hour = lubridate::hour(date_time + 1),
       dayofweek = lubridate::wday(date, label = TRUE),
       mass_conc = ifelse(abs(mass_conc) == 9999999, NA, mass_conc),
       parameter = stringr::str_replace_all(parameter, " [(].*", "")
-    )
+    ) %>%
+    select(parameter:hour, date_time, dayofweek, mass_conc:valido)
 }
 
 #' Safe clean data
