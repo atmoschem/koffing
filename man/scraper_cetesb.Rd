@@ -5,7 +5,7 @@
 \title{Scraper CETESB}
 \usage{
 scraper_cetesb(station, parameter, start, end, login, password, type = "P",
-  invalidData = "on", network = "A")
+  invalidData = "on", network = "A", cleanData = TRUE)
 }
 \arguments{
 \item{station}{A numeric value indicating the station id from
@@ -32,6 +32,9 @@ average.}
 invalid data.}
 
 \item{network}{Network type: "A" for automatic or "M" for manual.}
+
+\item{cleanData}{Should the data be cleaned before returned? The
+default is TRUE. Set FALSE to return the data as extracted from Qualar.}
 }
 \value{
 A tibble with the data returned by the Qualar system.
