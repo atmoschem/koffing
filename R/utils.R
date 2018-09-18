@@ -80,7 +80,8 @@ clean_qualar_data <- function(df) {
       date = Data,
       hour = Hora,
       mass_conc = `Média Horária`,
-      mass_conc_movel = `Média Móvel`
+      mass_conc_movel = `Média Móvel`,
+      valido = `Válido`
     ) %>%
     dplyr::mutate(
       mass_conc = stringr::str_replace(mass_conc, ",", "."),

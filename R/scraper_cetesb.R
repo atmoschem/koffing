@@ -74,7 +74,8 @@ scraper_cetesb <- function(station, parameter, start, end, login, password,
 
     if(is.null(clean_data$result)) {
       warning(
-        "The clean data function didn't work. The qualar system may have changed. The raw data was returned."
+        "The clean data function didn't work.
+        The qualar system may have changed. The raw data was returned."
       )
       data
     } else {
