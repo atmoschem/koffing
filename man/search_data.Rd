@@ -4,8 +4,8 @@
 \alias{search_data}
 \title{Search data}
 \usage{
-search_data(url, station, parameter, start, end, network, type, invalidData,
-  cookie)
+search_data(url, station, parameter, start, end, network, type,
+  invalidData, cookie)
 }
 \description{
 Search data

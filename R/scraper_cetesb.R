@@ -38,7 +38,7 @@
 #' @export
 
 scraper_cetesb <- function(station, parameter, start, end, login, password,
-                           type = "P", invalidData = "on", network = "A",
+                           type = "P", invalidData = TRUE, network = "A",
                            cleanData = TRUE) {
 
   cookie <- get_session_cookie(

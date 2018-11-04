@@ -33,18 +33,29 @@ login_qualar <- function(url, login, password, cookie) {
 search_data <- function(url, station, parameter, start, end,
                         network, type, invalidData, cookie) {
 
+  if(invalidData) {
+    invalidData <- "on"
+  } else {
+    invalidData <- NULL
+  }
+
+  pars <- c(
+    irede = network,
+    dataInicialStr  = start,
+    dataFinalStr = end,
+    cDadosInvalidos = invalidData,
+    iTipoDado = type
+  )
+
+  pars <- as.list(pars)
+
+  pars$estacaoVO.nestcaMonto <- station
+  pars$parametroVO.nparmt <- parameter
+
   httr::POST(
     url,
     query = list(method = "pesquisar"),
-    body = list(
-      irede = network,
-      dataInicialStr  = start,
-      dataFinalStr = end,
-      cDadosInvalidos = invalidData,
-      iTipoDado = type,
-      estacaoVO.nestcaMonto = station,
-      parametroVO.nparmt = parameter
-    ),
+    body = pars,
     encode = "form",
     httr::set_cookies(cookie)
   )
@@ -94,7 +105,7 @@ clean_qualar_data <- function(df) {
       mass_conc = ifelse(abs(mass_conc) == 9999999, NA, mass_conc),
       parameter = stringr::str_replace_all(parameter, " [(].*", "")
     ) %>%
-    select(parameter:hour, date_time, dayofweek, mass_conc:valido)
+    dplyr::select(parameter:hour, date_time, dayofweek, mass_conc:valido)
 }
 
 #' Safe clean data

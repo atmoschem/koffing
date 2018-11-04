@@ -4,8 +4,8 @@
 \alias{scraper_cetesb}
 \title{Scraper CETESB}
 \usage{
-scraper_cetesb(station, parameter, start, end, login, password, type = "P",
-  invalidData = "on", network = "A", cleanData = TRUE)
+scraper_cetesb(station, parameter, start, end, login, password,
+  type = "P", invalidData = TRUE, network = "A", cleanData = TRUE)
 }
 \arguments{
 \item{station}{A numeric value indicating the station id from
