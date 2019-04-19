@@ -1,5 +1,5 @@
 
-# koffing <img src="man/figures/logo.png" align="right" width = "40%">
+# koffing <img src="man/figures/logo.png" align="right" width = "10%">
 
 The goal of `koffing` is to assemble R functions to catch (scrape) air
 pollution data.
