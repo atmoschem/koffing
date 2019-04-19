@@ -28,7 +28,8 @@ koffing::scraper_cetesb(
   start = "01/01/2018", 
   end = "31/01/2018", 
   login = "login", 
-  password = "password")
+  password = "password"
+)
 ```
 
 If you substitute the values `login` and `password` by your login and
