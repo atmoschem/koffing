@@ -1,8 +1,9 @@
 
-# koffing <a src = "https://rpollution.com"> <img src="man/figures/logo.png" align="right" width = "16%"> </a>
+# koffing <img src="man/figures/logo.png" align="right" width = "15%">
 
 The goal of `koffing` is to assemble R functions to catch (scrape) air
-pollution data.
+pollution data. `koffing` is from the same creator of the blog
+[Rpollution](https://rpollution.com).
 
 ## Installation
 
