@@ -16,7 +16,7 @@ The goal of `koffing` is to assemble R functions to catch (scrape) air pollution
 
 ## Installation
 
-You can install koffing from github with:
+You can install `koffing` from github with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
