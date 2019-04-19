@@ -1,9 +1,3 @@
-## Koffing
-
-From the creator of the blog [www.rpollution.com](https://www.rpollution.com/)
-
-R functions to work with air pollution data.
-
 ---
 output: github_document
 ---
