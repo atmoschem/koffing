@@ -1,6 +1,6 @@
 Package: koffing
 Title: Air pollution data and scrapers for "catching" air pollution data from public sources
-Version: 0.0.2
+Version: 1.0.0
 Authors@R: c(
   person(given = "William", family = "Amorim", role = c("aut", "cre"), email = "williamo@curso-r.com"),
   person(given = "Sergio", family = "Ibarra-Espinosa", role = c("ctb"), email = "sergio.ibarra@usp.br", comment = c(ORCID = "0000-0002-3162-1905")))
