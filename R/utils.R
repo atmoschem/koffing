@@ -27,88 +27,54 @@ login_qualar <- function(url, login, password, cookie) {
   )
 }
 
-#' Search data
+#' Get data
 #'
 #'
-search_data <- function(url, station, parameter, start, end,
-                        network, type, invalidData, cookie) {
+get_data <- function(url, station, parameter, start, end, cookie) {
 
-  if(invalidData) {
-    invalidData <- "on"
-  } else {
-    invalidData <- NULL
-  }
-
-  pars <- c(
-    irede = network,
+  pars <- list(
     dataInicialStr  = start,
     dataFinalStr = end,
-    cDadosInvalidos = invalidData,
-    iTipoDado = type
+    estacaoVO.nestcaMonto = station,
+    nparmtsSelecionados = parameter
   )
-
-  pars <- as.list(pars)
-
-  pars$estacaoVO.nestcaMonto <- station
-  pars$parametroVO.nparmt <- parameter
 
   httr::POST(
     url,
-    query = list(method = "pesquisar"),
+    query = list(method = "exportar"),
     body = pars,
     encode = "form",
     httr::set_cookies(cookie)
   )
 }
 
+
 #' Extract data
 #'
 #'
-extract_data <- function(res) {
+extract_data <- function(res, station, parameter) {
 
-  httr::content(res) %>%
-    rvest::html_table(fill = TRUE) %>%
-    magrittr::extract2(2)
+  cetesb_param_ids <- koffing::cetesb_param_ids
+  cetesb_station_ids <- koffing::cetesb_station_ids
 
-}
+  station_name <- cetesb_station_ids$stationname[cetesb_station_ids$id == station]
+  par_name <- cetesb_param_ids$param_abbrev[cetesb_param_ids$id == parameter]
 
-
-#' Clean data
-#'
-#' @export
-clean_qualar_data <- function(df) {
-
-  df <- janitor::remove_empty(df, "cols")
-
-  col_names <- as.character(df[1,])
-
-  df %>%
-    magrittr::set_colnames(col_names) %>%
-    dplyr::slice(-1) %>%
-    dplyr::select(
-      parameter = `Nome Parâmetro`,
-      stationname = `Nome Estação`,
-      date = Data,
-      hour = Hora,
-      mass_conc = `Média Horária`,
-      mass_conc_movel = `Média Móvel`,
-      valido = `Válido`
-    ) %>%
+  suppressMessages(httr::content(res)) %>%
+    dplyr::slice(-(1:6)) %>%
+    tidyr::separate(col = 1, c("date", "hour", "conc"), sep = ";") %>%
     dplyr::mutate(
-      mass_conc = stringr::str_replace(mass_conc, ",", "."),
-      mass_conc = as.numeric(mass_conc),
       date = lubridate::dmy(date),
-      date_time = lubridate::ymd_hms(paste(date, paste0(hour, ":00"))) - 1,
-      hour = stringr::str_sub(hour, 1, 2),
-      hour = as.numeric(hour),
-      dayofweek = lubridate::wday(date, label = TRUE),
-      mass_conc = ifelse(abs(mass_conc) == 9999999, NA, mass_conc),
-      parameter = stringr::str_replace_all(parameter, " [(].*", "")
+      conc = as.numeric(conc),
+      hour = stringr::str_extract(hour, "[0-9]{2}") %>% as.numeric,
+      stationname = station_name,
+      parameter = par_name
     ) %>%
-    dplyr::select(parameter:hour, date_time, dayofweek, mass_conc:valido)
+    dplyr::select(stationname, parameter, date, hour, conc)
 }
 
-#' Safe clean data
+#' Safe extract data
 #'
 #'
-safe_clean_data <- purrr::safely(clean_qualar_data)
+safe_extract_data <- purrr::possibly(extract_data, otherwise = NULL)
+

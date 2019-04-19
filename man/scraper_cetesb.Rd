@@ -5,15 +5,12 @@
 \title{Scraper CETESB}
 \usage{
 scraper_cetesb(station, parameter, start, end, login, password,
-  type = "P", invalidData = TRUE, network = "A", cleanData = TRUE)
+  safe = FALSE, file = NULL)
 }
 \arguments{
 \item{station}{A numeric value indicating the station id from
 where you wish to get the data.
 See \link[koffing:cetesb_station_ids]{koffing::cetesb_station_ids}.}
-
-\item{parameter}{A numeric value indicating the CETESB parameter
-id. See \link[koffing:cetesb_station_ids]{koffing::cetesb_station_ids}.}
 
 \item{start}{A string in the format "dd/mm/aaaa" representing
 the initial day for the data selection.}
@@ -25,16 +22,15 @@ final day for the data selection.}
 
 \item{password}{A string with your passoword on Qualar system.}
 
-\item{type}{Type of data: "P" for hourly mean or "M" for moving
-average.}
+\item{safe}{If FALSE (default) the function will return a error if it can't
+extract the requested data.}
 
-\item{invalidData}{If TRUE, the system will return rows with
-invalid data.}
+\item{file}{A string containing a path to a .rds file where the data will be
+written. If NULL (default) the data will be return.}
 
-\item{network}{Network type: "A" for automatic or "M" for manual.}
-
-\item{cleanData}{Should the data be cleaned before returned? The
-default is TRUE. Set FALSE to return the data as extracted from Qualar.}
+\item{parameters}{A numeric vector of maximum length equal to 3 indicating
+the ids of the parameters you want to get the data from.
+See \link[koffing:cetesb_station_ids]{koffing::cetesb_station_ids}.}
 }
 \value{
 A tibble with the data returned by the Qualar system.

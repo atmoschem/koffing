@@ -3,21 +3,19 @@
 #' @param station A numeric value indicating the station id from
 #' where you wish to get the data.
 #' See [koffing::cetesb_station_ids].
-#' @param parameter A numeric value indicating the CETESB parameter
-#' id. See [koffing::cetesb_station_ids].
+#' @param parameters A numeric vector of maximum length equal to 3 indicating
+#' the ids of the parameters you want to get the data from.
+#' See [koffing::cetesb_station_ids].
 #' @param start A string in the format "dd/mm/aaaa" representing
 #' the initial day for the data selection.
 #' @param end A string in the format "dd/mm/aaaa" representing  the
 #' final day for the data selection.
-#' @param type Type of data: "P" for hourly mean or "M" for moving
-#' average.
 #' @param login A string with your login on Qualar system.
 #' @param password A string with your passoword on Qualar system.
-#' @param invalidData If TRUE, the system will return rows with
-#' invalid data.
-#' @param network Network type: "A" for automatic or "M" for manual.
-#' @param cleanData Should the data be cleaned before returned? The
-#' default is TRUE. Set FALSE to return the data as extracted from Qualar.
+#' @param safe If FALSE (default) the function will return a error if it can't
+#' extract the requested data.
+#' @param file A string containing a path to a .rds file where the data will be
+#' written. If NULL (default) the data will be return.
 #'
 #' @return A tibble with the data returned by the Qualar system.
 #' @importFrom magrittr "%>%" set_colnames extract2
@@ -38,52 +36,49 @@
 #' @export
 
 scraper_cetesb <- function(station, parameter, start, end, login, password,
-                           type = "P", invalidData = TRUE, network = "A",
-                           cleanData = TRUE) {
+                           safe = FALSE, file = NULL) {
+
+  if(!is.null(file))
+    if(fs::path_ext(file) != "rds")
+      stop("`file` must be a path to a rds file")
 
   cookie <- get_session_cookie(
-    url = "http://qualar.cetesb.sp.gov.br/qualar/home.do"
+    url = "https://qualar.cetesb.sp.gov.br/qualar/home.do"
   )
 
   res <- login_qualar(
-    url = "http://qualar.cetesb.sp.gov.br/qualar/autenticador",
+    url = "https://qualar.cetesb.sp.gov.br/qualar/autenticador",
     login = login,
     password = password,
     cookie = cookie
   )
 
-  res <- search_data(
-    url = "http://qualar.cetesb.sp.gov.br/qualar/exportaDados.do",
+  res <- get_data(
+    url = "https://qualar.cetesb.sp.gov.br/qualar/exportaDadosAvanc.do?method=exportar",
     station = station,
     parameter = parameter,
     start = start,
     end = end,
-    network = network,
-    type = type,
-    invalidData = invalidData,
     cookie = cookie
   )
 
-  data <- extract_data(res)
+  data <- safe_extract_data(res, station, parameter)
 
-  data
-
-  if(cleanData == TRUE) {
-
-    clean_data <- safe_clean_data(data)
-
-    if(is.null(clean_data$result)) {
-      warning(
-        "The clean data function didn't work.
-        The qualar system may have changed. The raw data was returned."
-      )
-      data
-    } else {
-      clean_data$result
-    }
-
-  } else {
-    data
+  if(is.null(data) & !safe) {
+    stop("An error ocurred when extracting data.\n
+         Make sure that:\n
+         - you are connected to the internet;
+         - the login and password are correct;
+         - the selected station measures the requested parameter.")
+  } else if(is.null(data) & safe) {
+    message("Data for parameter {parameter} from station {station} was not downloaded.")
+  } else if(!is.null(file) & !is.null(data)) {
+    readr::write_rds(data, file)
+    message(
+      glue::glue("Data for parameter {parameter} from station {station} was successfully download.")
+    )
+  } else if(is.null(file) & !is.null(data)) {
+    return(data)
   }
 
 }

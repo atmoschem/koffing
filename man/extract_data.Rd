@@ -4,7 +4,7 @@
 \alias{extract_data}
 \title{Extract data}
 \usage{
-extract_data(res)
+extract_data(res, station, parameter)
 }
 \description{
 Extract data
