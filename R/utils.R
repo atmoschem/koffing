@@ -44,7 +44,8 @@ get_data <- function(url, station, parameter, start, end, cookie) {
     query = list(method = "exportar"),
     body = pars,
     encode = "form",
-    httr::set_cookies(cookie)
+    httr::set_cookies(cookie),
+    httr::accept("text/csv")
   )
 }
 

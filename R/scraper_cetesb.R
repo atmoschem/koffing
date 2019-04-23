@@ -62,7 +62,11 @@ scraper_cetesb <- function(station, parameter, start, end, login, password,
     cookie = cookie
   )
 
-  data <- safe_extract_data(res, station, parameter)
+  if(str_detect(res$headers$`content-type`, "text/csv")) {
+    data <- safe_extract_data(res, station, parameter)
+  } else {
+    data <- NULL
+  }
 
   if(is.null(data) & !safe) {
     stop("An error ocurred when extracting data.\n
