@@ -82,13 +82,13 @@ scraper_cetesb <- function(station, parameter, start, end, login, password,
       invisible(FALSE)
     }
   } else if(!is.null(data)) {
+    message(
+      glue::glue("Data for parameter {parameter} from station {station} was successfully downloaded.")
+    )
     if(is.null(file)) {
       return(data)
     } else {
       readr::write_rds(data, file)
-      message(
-        glue::glue("Data for parameter {parameter} from station {station} was successfully downloaded.")
-      )
       invisible(TRUE)
     }
   }
