@@ -60,9 +60,11 @@ extract_data <- function(res, station, parameter) {
   station_name <- cetesb_station_ids$stationname[cetesb_station_ids$id == station]
   par_name <- cetesb_param_ids$param_abbrev[cetesb_param_ids$id == parameter]
 
-  suppressMessages(httr::content(res)) %>%
-    dplyr::slice(-(1:6)) %>%
-    tidyr::separate(col = 1, c("date", "hour", "conc"), sep = ";") %>%
+  suppressMessages({
+    httr::content(res, "text") %>%
+      read_csv2(skip = 8, col_names = FALSE, col_types = c("ccn"))
+  }) %>%
+    rename(date = X1, hour = X2, conc = X3) %>%
     dplyr::mutate(
       date = lubridate::dmy(date),
       conc = as.numeric(conc),

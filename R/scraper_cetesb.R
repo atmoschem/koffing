@@ -71,14 +71,22 @@ scraper_cetesb <- function(station, parameter, start, end, login, password,
          - the login and password are correct;
          - the selected station measures the requested parameter.")
   } else if(is.null(data) & safe) {
-    message("Data for parameter {parameter} from station {station} was not downloaded.")
-  } else if(!is.null(file) & !is.null(data)) {
-    readr::write_rds(data, file)
-    message(
-      glue::glue("Data for parameter {parameter} from station {station} was successfully download.")
-    )
-  } else if(is.null(file) & !is.null(data)) {
-    return(data)
+    message(glue::glue("Data for parameter {parameter} from station {station} was not downloaded."))
+    if(is.null(file)) {
+      return(NULL)
+    } else {
+      invisible(FALSE)
+    }
+  } else if(!is.null(data)) {
+    if(is.null(file)) {
+      return(data)
+    } else {
+      readr::write_rds(data, file)
+      message(
+        glue::glue("Data for parameter {parameter} from station {station} was successfully downloaded.")
+      )
+      invisible(TRUE)
+    }
   }
 
 }
