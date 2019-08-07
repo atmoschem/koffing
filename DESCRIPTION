@@ -14,12 +14,17 @@ Suggests:
     knitr,
     rmarkdown
 Imports: 
-  httr, 
-  rvest, 
-  magrittr,
-  janitor,
-  dplyr,
-  purrr
+    httr,
+    rvest,
+    magrittr,
+    janitor,
+    dplyr,
+    purrr,
+    fs,
+    glue,
+    lubridate,
+    readr,
+    stringr
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
