@@ -3,7 +3,8 @@
 
 The goal of `koffing` is to assemble R functions to catch (scrape) air
 pollution data. `koffing` is from the same creator of the blog
-[Rpollution](https://rpollution.com).
+[Rpollution](https://rpollution.com). Newer versions of this scraper can
+be found [here](https://github.com/williamorim/rpollution).
 
 ## Installation
 

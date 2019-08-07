@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 
 # koffing <img src="man/figures/logo.png" align="right" width = "15%">
 
-The goal of `koffing` is to assemble R functions to catch (scrape) air pollution data. `koffing` is from the same creator of the blog [Rpollution](https://rpollution.com).
+The goal of `koffing` is to assemble R functions to catch (scrape) air pollution data. `koffing` is from the same creator of the blog [Rpollution](https://rpollution.com). Newer versions of this scraper can be found [here](https://github.com/williamorim/rpollution).
 
 ## Installation
 
