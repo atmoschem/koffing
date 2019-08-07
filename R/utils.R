@@ -63,9 +63,9 @@ extract_data <- function(res, station, parameter) {
 
   suppressMessages({
     httr::content(res, "text") %>%
-      read_csv2(skip = 8, col_names = FALSE, col_types = c("ccn"))
+      readr::read_csv2(skip = 8, col_names = FALSE, col_types = c("ccn"))
   }) %>%
-    rename(date = X1, hour = X2, conc = X3) %>%
+    dplyr::rename(date = X1, hour = X2, conc = X3) %>%
     dplyr::mutate(
       date = lubridate::dmy(date),
       conc = as.numeric(conc),

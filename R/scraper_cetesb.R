@@ -62,7 +62,7 @@ scraper_cetesb <- function(station, parameter, start, end, login, password,
     cookie = cookie
   )
 
-  if(str_detect(res$headers$`content-type`, "text/csv")) {
+  if(stringr::str_detect(res$headers$`content-type`, "text/csv")) {
     data <- safe_extract_data(res, station, parameter)
   } else {
     data <- NULL
@@ -94,4 +94,5 @@ scraper_cetesb <- function(station, parameter, start, end, login, password,
   }
 
 }
+
 
